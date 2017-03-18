@@ -11,7 +11,7 @@ namespace CacheProvider
             return GetAllPeople();
         }
 
-        [CacheableResult(ExpireInMinutes = 300, Provider = "RedisCacheProvider")]
+        [CacheableResult(ExpireInMinutes = 1, Provider = "RedisCacheProvider")]
         public IEnumerable<Person> GetMen()
         {
             return GetAllPeople().Where(p => p.Sex == "M");

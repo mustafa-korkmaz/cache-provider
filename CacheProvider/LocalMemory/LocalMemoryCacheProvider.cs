@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Caching;
 
 namespace CacheProvider.LocalMemory
@@ -8,7 +9,7 @@ namespace CacheProvider.LocalMemory
         /// <summary>
         /// local memory cache object
         /// </summary>
-        private MemoryCache _cache; 
+        private MemoryCache _cache;
 
         #region singleton definition
 
@@ -27,7 +28,7 @@ namespace CacheProvider.LocalMemory
 
         #region ICacheProvider implementation
 
-        public void AddItem(string key, object item, int expireInMinutes)
+        public void Add(string key, object item, int expireInMinutes)
         {
             lock (_padlock)
             {
@@ -40,19 +41,10 @@ namespace CacheProvider.LocalMemory
                     var absoluteExpiration = new TimeSpan(0, 0, expireInMinutes, 0);
                     _cache.Add(key, item, DateTimeOffset.Now.Add(absoluteExpiration));
                 }
-
             }
         }
 
-        public object GetItem(string key)
-        {
-            lock (_padlock)
-            {
-                return _cache[key];
-            }
-        }
-
-        public T GetItem<T>(string key)
+        public T Get<T>(string key)
         {
             lock (_padlock)
             {
@@ -60,7 +52,7 @@ namespace CacheProvider.LocalMemory
             }
         }
 
-        public void RemoveItem(string key)
+        public void Remove(string key)
         {
             lock (_padlock)
             {

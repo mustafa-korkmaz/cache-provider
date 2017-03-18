@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CacheProvider.Tests
@@ -13,9 +13,9 @@ namespace CacheProvider.Tests
 
             sampleData.GetMen(); // from source
 
-            sampleData.GetMen(); // from cache
-
-      
+            var res = sampleData.GetMen(); // from cache
+            
+            Assert.IsTrue(res.Count()==500);
         }
     }
 }

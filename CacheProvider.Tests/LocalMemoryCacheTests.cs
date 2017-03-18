@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CacheProvider.Tests
@@ -11,10 +11,11 @@ namespace CacheProvider.Tests
         {
             var sampleData = new SampleData();
 
-
             sampleData.GetPeople(); // from source
 
-            sampleData.GetPeople(); // from cache
+            var res=sampleData.GetPeople(); // from cache
+
+            Assert.IsTrue(res.Count() == 1000);
         }
     }
 }

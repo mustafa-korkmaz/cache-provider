@@ -38,11 +38,21 @@ namespace CacheProvider
             var cache = cachePrviderType.GetProperty("Instance").GetValue(null) as ICacheProvider;
 
             // get method args to have method result specific value
+
+            //todo: change argument logic
             var arguments = args.Arguments.Union(new[] { WindowsIdentity.GetCurrent().Name }).ToList();
 
+            //todo: hash key
             var key = GetCacheKey(args.Method, arguments);
 
-            var result = cache.GetItem(key);
+            var mi = args.Method as MethodInfo;
+
+            var type = mi.ReturnType;
+
+            MethodInfo method = cache.GetType().GetMethod("Get")
+                             .MakeGenericMethod(new Type[] { type });
+
+            var result = method.Invoke(cache, new object[] { key });
             if (result != null)
             {
                 args.ReturnValue = result;
@@ -51,7 +61,7 @@ namespace CacheProvider
 
             base.OnInvoke(args);
 
-            cache.AddItem(key, args.ReturnValue, ExpireInMinutes);
+            cache.Add(key, args.ReturnValue, ExpireInMinutes);
         }
 
         private string GetCacheKey(MemberInfo methodInfo, IEnumerable<object> arguments)
